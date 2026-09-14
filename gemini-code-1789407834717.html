@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para vos 💛</title>
+    
+    <!-- Importando fuentes hermosas desde Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fffdf7; /* Un tono crema muy suave */
+            overflow: hidden;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        #start-btn {
+            padding: 18px 40px;
+            font-size: 1.5rem;
+            background-color: #ffb703;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 183, 3, 0.5);
+            transition: all 0.3s ease;
+            z-index: 20;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+        
+        #start-btn:hover {
+            transform: scale(1.08);
+            background-color: #fb8500;
+            box-shadow: 0 6px 25px rgba(251, 133, 0, 0.6);
+        }
+
+        #message {
+            display: none;
+            text-align: center;
+            z-index: 100; /* Asegura que el mensaje quede por encima de las flores */
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            animation: popIn 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            max-width: 85%;
+        }
+
+        #message h1 {
+            color: #e67700;
+            margin: 0 0 15px 0;
+            font-size: 3.5rem;
+            font-family: 'Caveat', cursive; /* Letra cursiva tipo mano alzada */
+            line-height: 1.2;
+        }
+
+        #message p {
+            color: #444;
+            font-size: 1.3rem;
+            margin: 0;
+            line-height: 1.6;
+            font-family: 'Poppins', sans-serif; /* Letra limpia y moderna */
+        }
+
+        .flower {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 1;
+            pointer-events: none; /* Para que no interfieran si ella quiere tocar la pantalla */
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="start-btn">Toca aquí para una sorpresa ✨</button>
+    
+    <div id="message">
+        <h1>¡Que tengas un muy lindo día!</h1>
+        <p>Quería aprovechar para recordarte lo mucho que te aprecio y te quiero. 💛</p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('start-btn');
+        const message = document.getElementById('message');
+        
+        // Enlaces a imágenes PNG transparentes de girasoles y flores amarillas
+        const flowersUrls = [
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sunflower_icon.svg/512px-Sunflower_icon.svg.png', // Girasol
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Simple_yellow_flower.svg/512px-Simple_yellow_flower.svg.png', // Flor amarilla sencilla
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Yellow_flower_icon.svg/512px-Yellow_flower_icon.svg.png' // Otra variante amarilla
+        ];
+
+        btn.addEventListener('click', () => {
+            btn.style.display = 'none';
+            message.style.display = 'block';
+            
+            // Generar 150 flores para llenar toda la pantalla
+            const totalFlowers = 150;
+            for (let i = 0; i < totalFlowers; i++) {
+                createFlowerExplosion();
+            }
+        });
+
+        function createFlowerExplosion() {
+            const img = document.createElement('img');
+            img.src = flowersUrls[Math.floor(Math.random() * flowersUrls.length)];
+            img.classList.add('flower');
+            
+            // Tamaño aleatorio para cada flor (entre 40px y 120px)
+            const size = Math.random() * 80 + 40;
+            img.style.width = `${size}px`;
+            img.style.height = `${size}px`;
+            
+            document.body.appendChild(img);
+            
+            // Cálculos para la explosión en 360 grados
+            const angle = Math.random() * Math.PI * 2; // Ángulo aleatorio
+            const maxDistance = Math.max(window.innerWidth, window.innerHeight); 
+            const distance = Math.random() * maxDistance; // Distancia aleatoria hasta el borde de la pantalla
+            
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            const rotation = Math.random() * 720 - 360; // Rotación aleatoria mientras vuelan
+            
+            // Animación usando la API web de JavaScript (más potente para explosiones)
+            img.animate([
+                { transform: `translate(-50%, -50%) scale(0) rotate(0deg)` },
+                { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1) rotate(${rotation}deg)` }
+            ], {
+                duration: Math.random() * 2000 + 1500, // Duran entre 1.5 y 3.5 segundos en llegar a su lugar
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)', // Empieza rápido y frena suavemente
+                fill: 'forwards' // Hace que las imágenes se queden fijas en la pantalla al terminar
+            });
+        }
+    </script>
+</body>
+</html>
